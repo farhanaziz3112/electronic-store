@@ -20,9 +20,10 @@ These are some screenshots for the customer site:
 
 These are some screenshots for the admin site:
 
-![Screenshot 2024-08-30 115923](https://github.com/user-attachments/assets/d9b5220b-05ef-4793-b441-9dd3e98e9073)
-![Screenshot 2024-08-30 115855](https://github.com/user-attachments/assets/e691450a-7cf7-4acd-ab23-4fe2196c9dd6)
-![Screenshot 2024-08-30 115815](https://github.com/user-attachments/assets/3a3323c0-ac05-4d49-98b9-246b0dfad79d)
-![Screenshot 2024-08-30 115728](https://github.com/user-attachments/assets/1e4cb7cb-4d33-4066-9d36-b200055165c2)
-![Screenshot 2024-08-30 115707](https://github.com/user-attachments/assets/87e98373-4359-4608-912c-a659b605b56e)
-![Screenshot 2024-08-30 115632](https://github.com/user-attachments/assets/59774fd1-79aa-4acf-9072-f30371bec226)
+
+![Screenshot 2024-08-30 115632](https://github.com/user-attachments/assets/43ab65be-ec54-43b3-b1e4-25a7c827be60)
+![Screenshot 2024-08-30 115707](https://github.com/user-attachments/assets/326c9516-9f33-4304-9fb9-a05a88a8cc82)
+![Screenshot 2024-08-30 115728](https://github.com/user-attachments/assets/10d40197-78ba-42b8-bd7d-5ed10461705b)
+![Screenshot 2024-08-30 115815](https://github.com/user-attachments/assets/6d386c25-feec-4b98-80e2-71c6dbd79912)
+![Screenshot 2024-08-30 115855](https://github.com/user-attachments/assets/ca395b0b-5fa3-44e3-bb07-6b02705f3dc1)
+![Screenshot 2024-08-30 115923](https://github.com/user-attachments/assets/ad32d89a-c489-4450-bced-1e771a478b04)
