@@ -1,0 +1,177 @@
+<!-- <header>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav-content>
+      <mat-toolbar color="primary">
+        <ng-container
+          *ngTemplateOutlet="brand"
+          ngProjectAs="brand"
+        ></ng-container>
+        <ng-template #brand>
+          <mat-icon style="font-size: larger; margin-right: 10px">domain</mat-icon>
+        </ng-template>
+        <span class="title">{{ title }}</span>
+        <span style="margin-right: 50px"></span>
+
+        <ng-container *ngIf="authenticated$ | async">
+          <ng-container *ngTemplateOutlet="list"></ng-container>
+        </ng-container>
+        <ng-template #list>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/home']"
+            >Home</a
+          >
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/sales']"
+            >Sales</a
+          >
+        </ng-template>
+
+        <span class="spacer"></span>
+        <ng-content select="[right]"></ng-content>
+        <div *ngIf="authenticated$ | async; else loggedOut">
+          <button
+            aria-label="myAriaLabel"
+            (click)="logout()"
+            color="light"
+            mat-button
+            style="color: white"
+          >
+          Logout
+            <mat-icon matBadgeColor="accent" matBadgePosition="before"
+              >logout</mat-icon
+            >
+          </button>
+        </div>
+        <ng-template #loggedOut>
+          <button
+            aria-label="myAriaLabel"
+            (click)="login()"
+            color="light"
+            mat-button
+            style="color: white"
+          >
+          Login
+            <mat-icon matBadgeColor="accent" matBadgePosition="before"
+              >login</mat-icon
+            >
+          </button>
+        </ng-template>
+      </mat-toolbar>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</header>
+
+ -->
+
+<ng-container *ngIf="authenticated$ | async; else loginPage">
+  <p-menubar [model]="items">
+    <ng-template pTemplate="start">
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-right: 100px;
+        "
+      >
+        <i
+          [ngClass]="['pi', 'pi-shop']"
+          style="font-size: 2rem; color: black"
+        ></i>
+        <p
+          class="ml-2"
+          style="margin-left: 10px; font-size: 25px; font-weight: 300"
+        >
+          ES Admin
+        </p>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="item" let-item let-root="root">
+      <a pRipple class="flex align-items-center p-menuitem-link">
+        <span [class]="item.icon" style="margin: 10px"></span>
+        <span class="ml-2">{{ item.label }}</span>
+        <p-badge
+          *ngIf="item.badge"
+          [ngClass]="{ 'ml-auto': !root, 'ml-2': root }"
+          [value]="item.badge"
+        />
+        <!-- <span
+          *ngIf="item.shortcut"
+          class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+          >{{ item.shortcut }}</span
+        > -->
+        <i
+          *ngIf="item.items"
+          [ngClass]="[
+            'pi',
+            root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto'
+          ]"
+        ></i>
+      </a>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <ng-template pTemplate="profileitems" let-item let-root="root">
+        <a pRipple class="flex align-items-center p-menuitem-link">
+          <span [class]="item.icon" style="margin: 10px"></span>
+          <span class="ml-2">{{ item.label }}</span>
+          <p-badge
+            *ngIf="item.badge"
+            [ngClass]="{ 'ml-auto': !root, 'ml-2': root }"
+            [value]="item.badge"
+          />
+          <!-- <span
+            *ngIf="item.shortcut"
+            class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+            >{{ item.shortcut }}</span
+          > -->
+          <i
+            *ngIf="item.items"
+            [ngClass]="[
+              'pi',
+              root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto'
+            ]"
+          ></i>
+        </a>
+      </ng-template>
+      <div
+        class="flex align-items-center gap-2"
+        style="display: flex; flex-direction: row; align-items: center"
+      >
+        <div style="padding: 10px;">
+          <p-button
+            label="Logout"
+            icon="pi pi-sign-out"
+            (onClick)="logout()"
+            size="small"
+          ></p-button>
+        </div>
+        <p-avatar
+          image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+          shape="circle"
+          size="large"
+        />
+      </div>
+    </ng-template>
+  </p-menubar>
+</ng-container>
+
+<ng-template #loginPage>
+  <p-menubar>
+    <ng-template pTemplate="start">
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <i
+          [ngClass]="['pi', 'pi-shop']"
+          style="font-size: 2rem; color: black"
+        ></i>
+        <h2 class="ml-2" style="margin-left: 10px">ES Admin</h2>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <div class="flex align-items-center gap-2">
+        <p-button
+          label="Login"
+          icon="pi pi-sign-in"
+          (onClick)="login()"
+        ></p-button>
+      </div>
+    </ng-template>
+  </p-menubar>
+</ng-template>

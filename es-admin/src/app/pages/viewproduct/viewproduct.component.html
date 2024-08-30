@@ -1,0 +1,276 @@
+<p-breadcrumb [model]="breadCrumbs" class="mb-2">
+  <ng-template pTemplate="breadCrumb" let-breadCrumb>
+    <ng-container *ngIf="breadCrumb.route; else elseBlock">
+      <a [routerLink]="breadCrumb.route" class="p-menuitem-link">
+        <span [ngClass]="[breadCrumb.icon]" class="mr-2"></span>
+        <span class="text-primary font-semibold">{{ breadCrumb.label }}</span>
+      </a>
+    </ng-container>
+    <ng-template #elseBlock>
+      <a [href]="">
+        <span class="text-color">{{ breadCrumb.label }}</span>
+      </a>
+    </ng-template>
+  </ng-template>
+</p-breadcrumb>
+<div class="grid mt-3">
+  <div class="col-12">
+    <div class="card p-fluid">
+      <h5>{{ product$?.name }}</h5>
+      <p-tabView>
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <i class="pi pi-align-justify"></i>
+            <span class="ml-2">Details</span>
+          </ng-template>
+          <div
+            class="flex"
+            style="
+              text-align: center;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <img
+              [src]="product$?.image"
+              [alt]="product$?.name"
+              class="w-9 shadow-2 my-3 mx-0"
+              style="max-width: 300px; max-height: 400px"
+            />
+          </div>
+          <div class="flex flex-1">
+            <p-button
+              icon="pi pi-pencil"
+              label="Edit"
+              (onClick)="showEditDialog()"
+              class="mr-2"
+            />
+            <p-button
+              icon="pi pi-trash"
+              label="Delete"
+              severity="danger"
+              (onClick)="confirmDelete($event)"
+            />
+          </div>
+          <p-dialog
+            header="header"
+            [(visible)]="editDialogVisible"
+            [modal]="true"
+          >
+            <ng-template pTemplate="header">
+              <span class="font-bold text-2xl white-space-nowrap">{{
+                product$.name
+              }}</span>
+            </ng-template>
+            <span class="p-text-secondary text-l block mb-4"
+              >Update product information:</span
+            >
+            <div class="flex align-items-center gap-3 mb-3">
+              <form [formGroup]="productForm" (ngSubmit)="onEdit()">
+                <div class="field">
+                  <label htmlFor="name">Name</label>
+                  <input
+                    pInputText
+                    type="text"
+                    name="name"
+                    placeholder="Product name"
+                    formControlName="name"
+                  />
+                </div>
+                <div class="field flex flex-column">
+                  <label htmlFor="category">Category</label>
+                  <div class="grid">
+                    <ng-container *ngFor="let item of categoryList">
+                      <div class="col-12 xl:col-3 lg:col-4">
+                        <div style="text-align: start">
+                          <input
+                            type="radio"
+                            [value]="item.label"
+                            formControlName="category"
+                          />
+                          {{ item.label | titlecase }}
+                          <i [ngClass]="item.icon"></i>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="field">
+                  <label htmlFor="brand">Brand</label>
+                  <input
+                    pInputText
+                    type="text"
+                    name="brand"
+                    placeholder="Product brand"
+                    formControlName="brand"
+                  />
+                </div>
+                <div class="field">
+                  <label htmlFor="description">Description</label>
+                  <input
+                    pInputText
+                    type="text"
+                    name="description"
+                    placeholder="Product description"
+                    formControlName="description"
+                  />
+                </div>
+                <div class="field">
+                  <label htmlFor="salePrice">Sale Price</label>
+                  <input
+                    pInputText
+                    type="number"
+                    name="salePrice"
+                    placeholder="Product price"
+                    formControlName="salePrice"
+                  />
+                </div>
+                <div class="field">
+                  <label htmlFor="image">Image URL</label>
+                  <input
+                    pInputText
+                    type="text"
+                    name="image"
+                    placeholder="Product image URL"
+                    formControlName="image"
+                  />
+                </div>
+                <div class="field">
+                  <label htmlFor="quantity">Quantity</label>
+                  <input
+                    pInputText
+                    type="number"
+                    name="quantity"
+                    placeholder="Product quantity"
+                    formControlName="quantity"
+                  />
+                </div>
+                <div class="flex flex-1">
+                  <p-button
+                    class="m-2"
+                    icon="pi pi-check"
+                    label="Submit"
+                    (onClick)="onEdit()"
+                    severity="success"
+                  />
+                  <p-button
+                    class="m-2"
+                    icon="pi pi-times"
+                    label="Cancel"
+                    (onClick)="closeEditDialog()"
+                    severity="danger"
+                  />
+                </div>
+              </form>
+            </div>
+          </p-dialog>
+
+          <div class="col-12 flex flex-column">
+            <label htmlFor="name" class="mt-2 mb-1">Name</label>
+            <span class="font-bold text-xl">{{ product$?.name }}</span>
+            <label htmlFor="category" class="mt-3 mb-1">Category</label>
+            <div class="flex flex-1">
+              <span
+                [class]="'category-badge ' + product$?.category.toLowerCase()"
+              >
+                {{ product$?.category.toUpperCase() }}
+              </span>
+            </div>
+            <label htmlFor="salePrice" class="mt-3 mb-1">Sale Price</label>
+            <span class="font-bold text-xl"
+              >RM{{ product$?.salePrice | number : "1.2-2" }}</span
+            >
+            <label htmlFor="brand" class="mt-3 mb-1">Brand</label>
+            <span class="font-bold text-xl">{{ product$?.brand }}</span>
+            <label htmlFor="description" class="mt-3 mb-1">Description</label>
+            <span class="font-bold text-xl">{{ product$?.description }}</span>
+            <label htmlFor="code" class="mt-3 mb-1">Code</label>
+            <span class="font-bold text-xl">{{ product$?.code }}</span>
+            <label htmlFor="rating" class="mt-3 mb-1">Current Rating</label>
+            <p-rating
+              [(ngModel)]="product$.rating"
+              [readonly]="true"
+              [cancel]="false"
+            ></p-rating>
+            <label htmlFor="quantity" class="mt-3 mb-1">Quantity</label>
+            <span class="font-bold text-xl">{{ product$?.quantity }}</span>
+            <label htmlFor="inventoryStatus" class="mt-3 mb-1"
+              >Inventory Status</label
+            >
+            <div class="flex flex-1">
+              <span
+                [class]="
+                  'product-badge status-' +
+                  product$?.inventoryStatus.toLowerCase()
+                "
+                >{{ product$?.inventoryStatus }}</span
+              >
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <i class="pi pi-chart-bar"></i>
+            <span class="ml-2">Statistics</span>
+          </ng-template>
+          <app-statistics></app-statistics>
+        </p-tabPanel>
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <i class="pi pi-table"></i>
+            <span class="ml-2">Records</span>
+          </ng-template>
+          <app-records></app-records>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</div>
+
+<!-- 
+<div class="card">
+  <div class="container">
+    <div class="header" style="text-align: left">
+      <h1>Edit Product: {{ product$.name }}</h1>
+    </div>
+    <div class="product-form">
+      <form [formGroup]="productForm" (ngSubmit)="onEdit()">
+        <input
+          type="text"
+          name="name"
+          placeholder="Product name"
+          formControlName="name"
+        />
+        <ng-container
+          *ngFor="let item of categoryList"
+          style="display: flex; flex-direction: row"
+        >
+          <input type="radio" [value]="item" formControlName="category" />
+          {{ item }}
+        </ng-container>
+        <input
+          type="text"
+          name="description"
+          placeholder="Product description"
+          formControlName="description"
+        />
+        <input
+          type="number"
+          name="salePrice"
+          placeholder="Product price"
+          formControlName="salePrice"
+        />
+        <input
+          type="text"
+          a
+          name="image"
+          placeholder="Product image URL"
+          formControlName="image"
+        />
+      </form>
+      <button mat-fab extended class="bg-success" (click)="onEdit()">
+        Edit
+      </button>
+    </div>
+  </div>
+</div> -->

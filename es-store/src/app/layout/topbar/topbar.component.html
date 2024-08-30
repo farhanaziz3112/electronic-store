@@ -1,0 +1,185 @@
+<p-sidebar [(visible)]="cartSideBar" position="right" styleClass="w-30rem">
+  <div class="flex justify-content-between my-1">
+    <div class="flex-auto">
+      <h3>
+        Cart<i class="pi pi-shopping-cart mx-2" style="font-size: large"></i>
+      </h3>
+    </div>
+    <div class="flex-auto">
+      <div class="flex flex-1 justify-content-end">
+        <p-button
+          icon="pi pi-times"
+          severity="danger"
+          label="Clear Cart"
+          (onClick)="clearCart()"
+        />
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="cartProducts$ | async as products">
+    <ng-container *ngFor="let product of products">
+      <div class="flex my-1">
+        <div class="flex-auto">
+          {{ products.indexOf(product) + 1 }}
+        </div>
+        <div class="flex-auto">
+          <div class="card">
+            <div class="flex align-items-center justify-content-between">
+              <img
+                [src]="product.image"
+                [alt]="product.name"
+                class="shadow-2 my-3 mx-0"
+                width="100"
+                height="100"
+                priority
+              />
+              <div
+                class="flex flex-column align-items-start justify-content-start ml-1"
+              >
+                <p class="text-l font-bold text-truncate">
+                  {{ product.name }}
+                </p>
+                <p class="text-m text-truncate">
+                  Quantity: {{ product.quantity }}
+                </p>
+                <p class="text-m text-truncate">
+                  Total Price: RM
+                  {{ product.salePrice * product.quantity | number : "1.2-2" }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="numberOfItem != 0">
+      <div class="flex my-3 align-items-end justify-content-end">
+        <span class="text-xl font-bold"
+          >Total Price: RM{{ cartTotalPrice | number : "1.2-2" }}</span
+        >
+      </div>
+      <div class="flex align-items-end justify-content-end">
+        <p-button
+          icon="pi pi-check"
+          severity="success"
+          label="Check Out"
+          (onClick)="checkOut()"
+        />
+      </div>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="numberOfItem === 0">
+    <div
+      class="flex flex-column align-items-center justify-content-center"
+      style="height: 100vh"
+    >
+      <h5>The cart is empty!</h5>
+    </div>
+  </ng-container>
+</p-sidebar>
+<div class="layout-topbar">
+  <!-- <div class="grid mx-2 mt-2 align-items-center justify-content-center" style="background-color: grey;">
+    <div class="col-12 lg:col-2">
+      <div class="flex">
+        <a class="layout-topbar-logo" routerLink="">
+          <i
+            [ngClass]="['pi', 'pi-shop']"
+            style="font-size: 5rem; color: black"
+          ></i>
+          <span style="padding: 10px; font-size: larger">Electronic Store</span>
+        </a>
+      </div>
+    </div>
+    <div class="col-12 lg:col-8">
+      <div class="flex">
+        <input
+          pInputText
+          type="text"
+          #filter
+          placeholder="Search Keyword"
+          style="flex: 1"
+        />
+        <button class="p-link layout-topbar-button">
+          <i class="pi pi-search"></i>
+          <span>Settings</span>
+        </button>
+      </div>
+    </div>
+    <div class="col-12 lg:col-2">
+      <div class="flex align-items-end justify-content-end">
+        <button class="p-link layout-topbar-button">
+          <i class="pi pi-shopping-cart"></i>
+          <span>Calendar</span>
+        </button>
+        <button class="p-link layout-topbar-button">
+          <i class="pi pi-heart"></i>
+          <span>Settings</span>
+        </button>
+        <button class="p-link layout-topbar-button">
+          <i class="pi pi-user"></i>
+          <span>Profile</span>
+        </button>
+      </div>
+    </div>
+  </div> -->
+  <div class="flex flex-1" style="flex-direction: column">
+    <div class="flex justify-content-between" style="flex-direction: row">
+      <div class="flex">
+        <a class="layout-topbar-logo" routerLink="">
+          <i
+            [ngClass]="['pi', 'pi-shop']"
+            style="font-size: 2rem; color: black"
+          ></i>
+          <span style="padding: 10px; font-size: large">Electronic Store</span>
+        </a>
+      </div>
+      <div class="flex flex-1 mr-8">
+        <input
+          pInputText
+          type="text"
+          #filter
+          placeholder="Search in All Categories"
+          style="flex: 1"
+        />
+        <button class="p-link layout-topbar-button">
+          <i class="pi pi-search"></i>
+        </button>
+      </div>
+      <div #topbarmenu class="layout-topbar-menu">
+        <button class="p-link mx-3" (click)="cartSideBar = true">
+          <i
+            class="pi pi-shopping-cart"
+            pBadge
+            style="font-size: 2rem"
+            value="{{ numberOfItem }}"
+            severity="warning"
+          ></i>
+        </button>
+        <button class="p-link mx-3">
+          <i
+            class="pi pi-heart"
+            pBadge
+            style="font-size: 2rem"
+            severity="danger"
+          ></i>
+        </button>
+        <button class="p-link mx-3" (click)="usermenu.toggle($event)">
+          <i class="pi pi-user" pBadge style="font-size: 2rem"></i>
+          <p-menu #usermenu [popup]="true" [model]="userMenuItems"></p-menu>
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex flex-1 mt-3"
+      [style]="{ 'border-radius': '1rem' }"
+      styleClass="p-3 surface-0"
+    >
+      <div
+        class="flex align-items-center justify-content-center"
+        style="flex-direction: row"
+      >
+        <p-megaMenu [model]="menuItems" />
+      </div>
+    </div>
+  </div>
+</div>

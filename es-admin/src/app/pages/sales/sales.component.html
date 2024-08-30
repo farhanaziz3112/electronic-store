@@ -1,0 +1,242 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card">
+      <p-tabView>
+        <p-tabPanel>
+          <ng-template pTemplate="header">
+            <i class="pi pi-chart-bar"></i>
+            <span class="ml-2">Dashboard</span>
+          </ng-template>
+          <div class="grid">
+            <div class="col-12 lg:col-4 xl:col-4">
+              <div class="card mb-0">
+                <div class="flex justify-content-between mb-3">
+                  <div>
+                    <span class="block text-500 font-medium mb-3"
+                      >Quantity Product Sold</span
+                    >
+                    <div class="text-900 font-medium text-xl">
+                      {{ totalProductSold }}
+                    </div>
+                  </div>
+                  <div
+                    class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                    [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+                  >
+                    <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+                  </div>
+                </div>
+                <span class="text-green-500 font-medium">24 </span>
+                <span class="text-500">last week</span>
+              </div>
+            </div>
+            <div class="col-12 lg:col-4 xl:col-4">
+              <div class="card mb-0">
+                <div class="flex justify-content-between mb-3">
+                  <div>
+                    <span class="block text-500 font-medium mb-3"
+                      >Total Revenue</span
+                    >
+                    <div class="text-900 font-medium text-xl">
+                      RM{{ totalRevenue | number : "1.2-2" }}
+                    </div>
+                  </div>
+                  <div
+                    class="flex align-items-center justify-content-center bg-orange-100 border-round"
+                    [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+                  >
+                    <i class="pi pi-dollar text-orange-500 text-xl"></i>
+                  </div>
+                </div>
+                <span class="text-green-500 font-medium">%6 </span>
+                <span class="text-500">increased since last month</span>
+              </div>
+            </div>
+            <div class="col-12 lg:col-4 xl:col-4">
+              <div class="card mb-0">
+                <div class="flex justify-content-between mb-3">
+                  <div>
+                    <span class="block text-500 font-medium mb-3"
+                      >Total Purchase</span
+                    >
+                    <div class="text-900 font-medium text-xl">
+                      {{ totalPurchases }}
+                    </div>
+                  </div>
+                  <div
+                    class="flex align-items-center justify-content-center bg-cyan-100 border-round"
+                    [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+                  >
+                    <i class="pi pi-shopping-bag text-cyan-500 text-xl"></i>
+                  </div>
+                </div>
+                <span class="text-green-500 font-medium">12 </span>
+                <span class="text-500">last week</span>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel
+          ><ng-template pTemplate="header">
+            <i class="pi pi-table"></i>
+            <span class="ml-2">Records</span>
+          </ng-template>
+          <p-table
+            #dt1
+            [value]="filtereddata$"
+            dataKey="customerId"
+            [rows]="10"
+            [rowHover]="true"
+            [paginator]="true"
+            responsiveLayout="scroll"
+            [expandedRowKeys]="expandedRows"
+          >
+            <ng-template pTemplate="caption">
+              <div class="flex justify-content-between flex-column sm:flex-row">
+                <div class="flex">
+                  <div class="flex flex-column">
+                    <div class="text-m font-semibold mb-1">Sort</div>
+                    <p-dropdown
+                      placeholder="Sort"
+                      [options]="sortOptions"
+                      (onChange)="onSortChange($event)"
+                      class="mr-2"
+                    ></p-dropdown>
+                  </div>
+                </div>
+                <span class="p-input-icon-left">
+                  <i class="pi pi-search"></i>
+                  <input
+                    pInputText
+                    type="text"
+                    #filter
+                    placeholder="Search Purchase ID"
+                    class="w-full"
+                    (input)="onTableFilter(dt1, $event)"
+                  />
+                </span>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="max-width: 2px"></th>
+                <th style="min-width: 12rem">
+                  <div class="flex justify-content-between align-items-center">
+                    Purchase ID
+                  </div>
+                </th>
+                <th style="min-width: 12rem">
+                  <div class="flex justify-content-between align-items-center">
+                    Customer ID
+                  </div>
+                </th>
+                <th style="min-width: 12rem">
+                  <div class="flex justify-content-between align-items-center">
+                    Total Price (RM)
+                  </div>
+                </th>
+                <th style="min-width: 12rem">
+                  <div class="flex justify-content-between align-items-center">
+                    Quantity
+                  </div>
+                </th>
+                <th style="min-width: 12rem">
+                  <div class="flex justify-content-between align-items-center">
+                    Date
+                  </div>
+                </th>
+                <th style="min-width: 12rem">
+                  <div class="flex justify-content-between align-items-center">
+                    Status
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-purchase let-expanded="expanded">
+              <tr>
+                <td>
+                  <button
+                    type="button"
+                    pButton
+                    pRipple
+                    [pRowToggler]="purchase"
+                    class="p-button-text p-button-rounded p-button-plain"
+                    [icon]="
+                      expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'
+                    "
+                  ></button>
+                </td>
+                <td>{{ purchase._id }}</td>
+                <td>{{ purchase.customerId }}</td>
+                <td>{{ purchase.totalPrice | number : "1.2-2" }}</td>
+                <td>{{ purchase.quantity }}</td>
+                <td>{{ purchase.date.toDateString() }}</td>
+                <td>{{ purchase.status }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-purchase>
+              <tr>
+                <td colspan="7">
+                  <div class="p-3">
+                    <p-table
+                      [value]="purchase.productPurchases"
+                      dataKey="productCode"
+                      responsiveLayout="scroll"
+                    >
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th style="min-width: 5rem">
+                            <div
+                              class="flex justify-content-between align-items-center"
+                            >
+                              Product Code
+                            </div>
+                          </th>
+                          <th style="min-width: 5rem">
+                            <div
+                              class="flex justify-content-between align-items-center"
+                            >
+                              Quantity
+                            </div>
+                          </th>
+                          <th style="min-width: 5rem">
+                            <div
+                              class="flex justify-content-between align-items-center"
+                            >
+                              Price Per Item
+                            </div>
+                          </th>
+                          <th style="min-width: 5rem">
+                            <div
+                              class="flex justify-content-between align-items-center"
+                            >
+                              Total Price
+                            </div>
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-productpurchase>
+                        <tr>
+                          <td>{{ productpurchase.productCode }}</td>
+                          <td>{{ productpurchase.quantity }}</td>
+                          <td>
+                            {{
+                              productpurchase.pricePerItem | number : "1.2-2"
+                            }}
+                          </td>
+                          <td>
+                            {{ productpurchase.totalPrice | number : "1.2-2" }}
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</div>

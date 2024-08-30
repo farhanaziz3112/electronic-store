@@ -1,0 +1,325 @@
+<p-breadcrumb [model]="breadCrumbs" class="mb-2">
+  <ng-template pTemplate="breadCrumb" let-breadCrumb>
+    <ng-container *ngIf="breadCrumb.route; else elseBlock">
+      <a [routerLink]="breadCrumb.route" class="p-menuitem-link">
+        <span [ngClass]="[breadCrumb.icon]" class="mr-2"></span>
+        <span class="text-primary font-semibold">{{ breadCrumb.label }}</span>
+      </a>
+    </ng-container>
+    <ng-template #elseBlock>
+      <i [ngClass]="breadCrumb.icon" class="mr-2" style="color: grey"></i>
+      <span class="text-color">{{ breadCrumb.label }}</span>
+    </ng-template>
+  </ng-template>
+</p-breadcrumb>
+<div class="card my-3">
+  <p-tabView>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="pi pi-shopping-cart"></i>
+        <span class="ml-2">On Cart</span>
+      </ng-template>
+      <ng-container *ngIf="numberOfItem != 0">
+        <p-table
+          #dt1
+          [value]="cartProducts$"
+          dataKey="code"
+          responsiveLayout="scroll"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width: 6rem"></th>
+              <th style="min-width: 12rem">
+                <div class="flex justify-content-center align-items-center">
+                  Name
+                </div>
+              </th>
+              <th style="min-width: 12rem">
+                <div class="flex justify-content-center align-items-center">
+                  Code
+                </div>
+              </th>
+              <th style="min-width: 12rem">
+                <div class="flex justify-content-center align-items-center">
+                  Quantity
+                </div>
+              </th>
+              <th style="min-width: 12rem">
+                <div class="flex justify-content-center align-items-center">
+                  Total Price (RM)
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-cartproduct>
+            <tr>
+              <td>
+                <div class="flex justify-content-center align-items-center">
+                  <img
+                    [src]="cartproduct.image"
+                    [alt]="cartproduct.name"
+                    class="shadow-2 my-3 mx-0"
+                    width="100"
+                    height="100"
+                    priority
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="flex justify-content-center align-items-center">
+                  {{ cartproduct.name }}
+                </div>
+              </td>
+              <td>
+                <div class="flex justify-content-center align-items-center">
+                  {{ cartproduct.code }}
+                </div>
+              </td>
+              <td>
+                <div class="flex justify-content-between align-items-center">
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-minus"
+                    class="p-button-rounded p-button-secondary p-button-outlined"
+                    (click)="minusCart(cartproduct, $event)"
+                  ></button>
+                  {{ cartproduct.quantity }}
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-plus"
+                    class="p-button-rounded p-button-secondary p-button-outlined"
+                    (click)="addCart(cartproduct)"
+                  ></button>
+                </div>
+              </td>
+              <td>
+                <div class="flex justify-content-center align-items-center">
+                  {{
+                    cartproduct.quantity * cartproduct.salePrice
+                      | number : "1.2-2"
+                  }}
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class="flex my-3 align-items-end justify-content-end">
+          <span class="text-xl font-bold"
+            >Total Price: RM{{ cartTotalPrice | number : "1.2-2" }}</span
+          >
+        </div>
+        <div class="flex align-items-end justify-content-end">
+          <p-button
+            icon="pi pi-check"
+            severity="success"
+            label="Place Order"
+            (onClick)="checkOut($event)"
+          />
+        </div>
+      </ng-container>
+      <ng-container *ngIf="numberOfItem === 0">
+        <div
+          class="flex flex-column align-items-center justify-content-center"
+          style="height: 50vh"
+        >
+          <h5>The cart is empty!</h5>
+        </div>
+      </ng-container>
+      <p-confirmDialog />
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="pi pi-truck"></i>
+        <span class="ml-2">To Ship</span>
+      </ng-template>
+      <p-table
+        #dt1
+        [value]="data$"
+        dataKey="customerId"
+        [rows]="10"
+        [rowHover]="true"
+        [paginator]="true"
+        responsiveLayout="scroll"
+        [expandedRowKeys]="expandedRows"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="max-width: 2px"></th>
+            <th style="min-width: 12rem">
+              <div class="flex justify-content-center align-items-center">
+                Purchase ID
+              </div>
+            </th>
+            <th style="min-width: 12rem">
+              <div class="flex justify-content-center align-items-center">
+                Total Price (RM)
+              </div>
+            </th>
+            <th style="min-width: 12rem">
+              <div class="flex justify-content-center align-items-center">
+                Quantity
+              </div>
+            </th>
+            <th style="min-width: 12rem">
+              <div class="flex justify-content-center align-items-center">
+                Date
+              </div>
+            </th>
+            <th style="min-width: 12rem">
+              <div class="flex justify-content-center align-items-center">
+                Status
+              </div>
+            </th>
+            <th style="max-width: 2px"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-purchase let-expanded="expanded">
+          <tr>
+            <td>
+              <button
+                type="button"
+                pButton
+                pRipple
+                [pRowToggler]="purchase"
+                class="p-button-text p-button-rounded p-button-plain"
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              ></button>
+            </td>
+            <td>
+              <div class="flex justify-content-center align-items-center">
+                {{ purchase._id }}
+              </div>
+            </td>
+            <td>
+              <div class="flex justify-content-center align-items-center">
+                {{ purchase.totalPrice | number : "1.2-2" }}
+              </div>
+            </td>
+            <td>
+              <div class="flex justify-content-center align-items-center">
+                {{ purchase.quantity }}
+              </div>
+            </td>
+            <td>
+              <div class="flex justify-content-center align-items-center">
+                {{ purchase.date.toDateString() }}
+              </div>
+            </td>
+            <td>
+              <div class="flex justify-content-center align-items-center">
+                <span [class]="'status-badge status-' + purchase.status">{{
+                  purchase.status === "toship"
+                    ? "To Ship"
+                    : purchase.status === "shipped"
+                    ? "Shipped"
+                    : "Reviewed"
+                }}</span>
+              </div>
+            </td>
+            <td>
+              <p-button
+                label="View Details"
+                [outlined]="true"
+                size="small"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-purchase>
+          <tr>
+            <td colspan="7">
+              <div class="p-3">
+                <p-table
+                  [value]="purchase.productPurchases"
+                  dataKey="productCode"
+                  responsiveLayout="scroll"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="min-width: 5rem">
+                        <div
+                          class="flex justify-content-between align-items-center"
+                        ></div>
+                      </th>
+                      <th style="min-width: 5rem">
+                        <div
+                          class="flex justify-content-between align-items-center"
+                        >
+                          Product Code
+                        </div>
+                      </th>
+                      <th style="min-width: 5rem">
+                        <div
+                          class="flex justify-content-between align-items-center"
+                        >
+                          Quantity
+                        </div>
+                      </th>
+                      <th style="min-width: 5rem">
+                        <div
+                          class="flex justify-content-between align-items-center"
+                        >
+                          Price Per Item
+                        </div>
+                      </th>
+                      <th style="min-width: 5rem">
+                        <div
+                          class="flex justify-content-between align-items-center"
+                        >
+                          Total Price
+                        </div>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-productpurchase>
+                    <tr>
+                      <td>
+                        <div
+                          class="flex justify-content-center align-items-center"
+                        >
+                          <img
+                            [src]="productpurchase.image"
+                            class="shadow-2 my-3 mx-0"
+                            width="100"
+                            height="100"
+                            priority
+                          />
+                        </div>
+                      </td>
+                      <td>{{ productpurchase.productCode }}</td>
+                      <td>{{ productpurchase.quantity }}</td>
+                      <td>
+                        {{ productpurchase.pricePerItem | number : "1.2-2" }}
+                      </td>
+                      <td>
+                        {{ productpurchase.totalPrice | number : "1.2-2" }}
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="pi pi-box"></i>
+        <span class="ml-2">Shipped</span>
+      </ng-template>
+      <div>Box</div>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="pi pi-star"></i>
+        <span class="ml-2">To Review</span>
+      </ng-template>
+      <div>To Review</div>
+    </p-tabPanel>
+  </p-tabView>
+</div>

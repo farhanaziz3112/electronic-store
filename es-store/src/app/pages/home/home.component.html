@@ -1,0 +1,217 @@
+<div class="grid">
+  <div class="col-12 lg:col-3">
+    <div class="card">
+      <div class="flex flex-column">
+        <div class="flex flex-1 justify-content-end">
+          <p-button
+            icon="pi pi-filter-slash"
+            severity="secondary"
+            label="Clear Filter"
+            (onClick)="clearFilter()"
+          />
+        </div>
+        <div class="flex flex-1 my-2">
+          <span class="p-input-icon-left mb-2 flex flex-1">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              #filter
+              placeholder="Search Name"
+              class="w-full"
+              (input)="onFilter(dv, $event)"
+            />
+          </span>
+        </div>
+        <div class="my-2">
+          <form [formGroup]="sortForm">
+            <span class="font-bold text-l">Sort</span>
+            <ng-container *ngFor="let item of sortOptions">
+              <div class="my-3" style="text-align: start">
+                <input
+                  type="radio"
+                  [value]="item.value"
+                  formControlName="sort"
+                />
+                {{ item.label }}
+              </div>
+            </ng-container>
+          </form>
+        </div>
+        <div class="my-2">
+          <form [formGroup]="priceForm">
+            <span class="font-bold text-l">Price</span>
+            <div
+              class="flex flex-1 my-2 justify-content-around align-items-center"
+            >
+              <label htmlFor="priceMax">Max</label>
+              <input
+                pInputText
+                type="number"
+                name="priceMax"
+                placeholder="Price max"
+                formControlName="priceMax"
+              />
+            </div>
+            <div class="flex my-2 justify-content-around align-items-center">
+              <label htmlFor="priceMin">Min</label>
+              <input
+                pInputText
+                type="number"
+                name="priceMin"
+                placeholder="Price min"
+                formControlName="priceMin"
+              />
+            </div>
+            <div class="flex flex-1 justify-content-center">
+              <p-button label="Apply Price" (onClick)="applyPriceLimit()" />
+            </div>
+            <ng-container *ngFor="let item of priceOptions">
+              <div class="my-3" style="text-align: start">
+                <input
+                  type="radio"
+                  [value]="item.value"
+                  formControlName="priceRange"
+                />
+                {{ item.label }}
+              </div>
+            </ng-container>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 lg:col-9">
+    <div class="card">
+      <p-dataView
+        #dv
+        [value]="filteredProducts$"
+        [rows]="9"
+        [paginator]="true"
+        filterBy="name"
+        layout="grid"
+      >
+        <ng-template let-products$ pTemplate="gridItem">
+          <div class="grid grid-nogutter">
+            <div class="col-12 md:col-4" *ngFor="let product of products$">
+              <div
+                class="card m-3 border-1 surface-border"
+                style="min-height: 450px"
+              >
+                <div
+                  class="flex flex-wrap gap-2 align-items-center justify-content-between mb-2"
+                >
+                  <div class="flex align-items-center">
+                    <span
+                      [class]="
+                        'category-badge ' + product.category.toLowerCase()
+                      "
+                    >
+                      {{ product.category.toUpperCase() }}
+                    </span>
+                  </div>
+                  <span
+                    [class]="
+                      'product-badge status-' +
+                      product.inventoryStatus.toLowerCase()
+                    "
+                    >{{ product.inventoryStatus }}:{{ product.quantity }}</span
+                  >
+                </div>
+                <div
+                  class="flex flex-column align-items-center text-center mb-3"
+                >
+                  <img
+                    [src]="product.image"
+                    [alt]="product.name"
+                    class="shadow-2 my-3 mx-0"
+                    width="200"
+                    height="200"
+                    priority
+                  />
+                  <p class="text-xl font-bold text-truncate">
+                    {{ product.name }}
+                  </p>
+                  <p-rating
+                    [(ngModel)]="product.rating"
+                    [readonly]="true"
+                    [cancel]="false"
+                  ></p-rating>
+                </div>
+                <div class="flex align-items-center justify-content-between">
+                  <span class="text-l font-semibold"
+                    >RM{{ product.salePrice | number : "1.2-2" }}</span
+                  >
+                  <p-button
+                    icon="pi pi-shopping-cart"
+                    (onClick)="showAddToCartDialog(product)"
+                  ></p-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-dataView>
+    </div>
+  </div>
+</div>
+<p-confirmDialog />
+<p-dialog
+  header="header"
+  [(visible)]="addToCartDialog"
+  [modal]="true"
+  [style]="{ width: '30rem', }"
+>
+  <ng-template pTemplate="header">
+    <span class="font-bold text-xl white-space-nowrap"
+      >Add to Cart Confirmation</span
+    >
+  </ng-template>
+  <ng-template pTemplate="body">
+    <div class="flex flex-column justify-content-between">
+      <div class="flex">
+        <span class="font-semibold text-l">{{ addToCartProduct.name }}</span>
+      </div>
+      <div class="flex flex-row justify-content-evenly align-items-center">
+        <div class="flex my-7">
+          <p-button
+            icon="pi pi-minus"
+            [rounded]="true"
+            size="small"
+            severity="secondary"
+            (onClick)="minusQuantity()"
+          ></p-button>
+        </div>
+        <div class="flex">
+          <span class="font-bold text-xl">{{ addToCartQuantity }}</span>
+        </div>
+        <div class="flex">
+          <p-button
+            icon="pi pi-plus"
+            [rounded]="true"
+            size="small"
+            severity="secondary"
+            (onClick)="addQuantity()"
+          ></p-button>
+        </div>
+      </div>
+      <div class="flex align-items-center justify-content-end">
+        <p-button
+          class="m-2"
+          icon="pi pi-times"
+          label="Cancel"
+          (onClick)="closeAddToCartDialog()"
+          severity="danger"
+        />
+        <p-button
+          class="m-2"
+          icon="pi pi-check"
+          label="Add to Cart"
+          (onClick)="addCart(addToCartProduct, addToCartQuantity)"
+          severity="success"
+        />
+      </div>
+    </div>
+  </ng-template>
+  <div class="flex align-items-center"></div>
+</p-dialog>

@@ -1,0 +1,121 @@
+<div class="grid mb-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="flex justify-content-between">
+        <div class="flex flex-column">
+          <div class="text-m mt-1">Current Revenue 2024</div>
+          <div class="text-900 font-medium text-xl my-1">
+            RM{{ productTotalRevenue | number : "1.2-2" }}
+          </div>
+        </div>
+        <div class="flex flex-column align-items-end">
+          <div class="text-m mt-1">Target Revenue 2024</div>
+          <div class="text-900 font-medium text-xl my-1">
+            RM{{ revenueTarget | number : "1.2-2" }}
+          </div>
+        </div>
+      </div>
+      <div class="grid my-1">
+        <div class="col">
+          <p-progressBar
+            [value]="progressValue"
+            [showValue]="true"
+          ></p-progressBar>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 lg:col-4 xl:col-4">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3"
+            >Total Product Sold</span
+          >
+          <div class="text-900 font-medium text-xl">{{ productTotalSold }}</div>
+        </div>
+        <div
+          class="flex align-items-center justify-content-center bg-blue-100 border-round"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+        >
+          <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+        </div>
+      </div>
+      <span class="text-green-500 font-medium">24 </span>
+      <span class="text-500">last week</span>
+    </div>
+  </div>
+  <div class="col-12 lg:col-4 xl:col-4">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">Total Revenue</span>
+          <div class="text-900 font-medium text-xl">
+            RM{{ productTotalRevenue | number : "1.2-2" }}
+          </div>
+        </div>
+        <div
+          class="flex align-items-center justify-content-center bg-orange-100 border-round"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+        >
+          <i class="pi pi-dollar text-orange-500 text-xl"></i>
+        </div>
+      </div>
+      <span class="text-green-500 font-medium">%6 </span>
+      <span class="text-500">increased since last month</span>
+    </div>
+  </div>
+  <div class="col-12 lg:col-4 xl:col-4">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">Total Purchase</span>
+          <div class="text-900 font-medium text-xl">
+            {{ productTotalPurchase }}
+          </div>
+        </div>
+        <div
+          class="flex align-items-center justify-content-center bg-cyan-100 border-round"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+        >
+          <i class="pi pi-shopping-bag text-cyan-500 text-xl"></i>
+        </div>
+      </div>
+      <span class="text-green-500 font-medium">12 </span>
+      <span class="text-500">last week</span>
+    </div>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-6">
+    <div class="card">
+      <div class="flex align-items-center justify-content-center">
+        <h5 class="text-align-center">Number of Products Sold</h5>
+      </div>
+      <p-chart
+        type="line"
+        [data]="lineChartData"
+        [options]="lineChartOptions"
+      />
+    </div>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-6">
+    <div class="card">
+      <div class="flex align-items-center justify-content-center">
+        <h5 class="text-align-center">Total Revenue (RM)</h5>
+      </div>
+      <p-chart type="bar" [data]="barChartData" [options]="barChartOptions" />
+    </div>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-6">
+    <div class="card">
+      <div class="flex align-items-center justify-content-center">
+        <h5 class="text-align-center">Total Revenue Percentage</h5>
+      </div>
+      <p-chart
+        type="doughnut"
+        [data]="donutChartData"
+        [options]="donutChartOptions"
+        height="200"
+      ></p-chart>
+    </div>
+  </div>
+</div>

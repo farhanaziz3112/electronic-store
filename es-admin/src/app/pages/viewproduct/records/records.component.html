@@ -1,0 +1,177 @@
+<div class="grid mb-3">
+  <div class="col-12 lg:col-4 xl:col-4">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3"
+            >Total Product Sold</span
+          >
+          <div class="text-900 font-medium text-xl">{{ productTotalSold }}</div>
+        </div>
+        <div
+          class="flex align-items-center justify-content-center bg-blue-100 border-round"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+        >
+          <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+        </div>
+      </div>
+      <span class="text-green-500 font-medium">24 </span>
+      <span class="text-500">last week</span>
+    </div>
+  </div>
+  <div class="col-12 lg:col-4 xl:col-4">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">Total Revenue</span>
+          <div class="text-900 font-medium text-xl">
+            RM{{ productTotalRevenue | number : "1.2-2" }}
+          </div>
+        </div>
+        <div
+          class="flex align-items-center justify-content-center bg-orange-100 border-round"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+        >
+          <i class="pi pi-dollar text-orange-500 text-xl"></i>
+        </div>
+      </div>
+      <span class="text-green-500 font-medium">%6 </span>
+      <span class="text-500">increased since last month</span>
+    </div>
+  </div>
+  <div class="col-12 lg:col-4 xl:col-4">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">Total Purchase</span>
+          <div class="text-900 font-medium text-xl">
+            {{ productTotalPurchase }}
+          </div>
+        </div>
+        <div
+          class="flex align-items-center justify-content-center bg-cyan-100 border-round"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+        >
+          <i class="pi pi-shopping-bag text-cyan-500 text-xl"></i>
+        </div>
+      </div>
+      <span class="text-green-500 font-medium">12 </span>
+      <span class="text-500">last week</span>
+    </div>
+  </div>
+</div>
+
+<p-table
+  #dt1
+  [value]="productpurchases$"
+  dataKey="purchaseId"
+  [rows]="10"
+  [rowHover]="true"
+  styleClass="p-datatable-gridlines"
+  [paginator]="true"
+  responsiveLayout="scroll"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex justify-content-between flex-column sm:flex-row">
+      <p-dropdown
+        placeholder="Sort"
+        [options]="sortOptions"
+        (onChange)="onSortChange($event)"
+      ></p-dropdown>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="purchaseId" style="min-width: 12rem">
+        <div class="flex justify-content-between align-items-center">
+          Purchase ID
+        </div>
+      </th>
+      <th pSortableColumn="quantity" style="min-width: 10rem">
+        <div class="flex justify-content-between align-items-center">
+          Quantity
+        </div>
+      </th>
+      <th pSortableColumn="pricePerItem" style="min-width: 12rem">
+        <div class="flex justify-content-between align-items-center">
+          Price Per Item (RM)
+        </div>
+      </th>
+      <th pSortableColumn="totalPrice" style="min-width: 12rem">
+        <div class="flex justify-content-between align-items-center">
+          Total Price (RM)
+        </div>
+      </th>
+      <th pSortableColumn="Date" style="min-width: 12rem">
+        <div class="flex justify-content-between align-items-center">Date</div>
+      </th>
+      <th style="min-width: 1rem"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-productpurchase>
+    <tr>
+      <td>{{ productpurchase.purchaseId }}</td>
+      <td>{{ productpurchase.quantity }}</td>
+      <td>{{ productpurchase.pricePerItem | number : "1.2-2" }}</td>
+      <td>{{ productpurchase.totalPrice | number : "1.2-2" }}</td>
+      <td>{{ productpurchase.date.toDateString() }}</td>
+      <td style="text-align: center">
+        <p-button
+          icon="pi pi-angle-right"
+          (onClick)="showPurchaseDialog(productpurchase)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  header="header"
+  [(visible)]="purchaseDialogVisible"
+  [modal]="true"
+  [style]="{ width: '30rem' }"
+>
+  <ng-template pTemplate="header">
+    <!-- <span class="font-bold text-2xl white-space-nowrap">{{
+      viewProductPurchase.purchaseId
+    }}</span> -->
+    <span class="font-bold text-xl white-space-nowrap"
+      >Purchase Information</span
+    >
+  </ng-template>
+  <ng-template pTemplate="body">
+    <div class="flex flex-column align-items-start">
+      <label htmlFor="name" class="mt-2 mb-1">Purchase ID</label>
+      <span class="font-bold text-xl">{{ purchase$._id }}</span>
+      <label htmlFor="category" class="mt-3 mb-1">Customer ID</label>
+      <span class="font-bold text-xl">{{ purchase$.customerId }}</span>
+      <label htmlFor="category" class="mt-3 mb-1">Quantity</label>
+      <span class="font-bold text-xl">{{ purchase$.quantity }}</span>
+      <label htmlFor="description" class="mt-3 mb-1">Total Price</label>
+      <span class="font-bold text-xl"
+        >RM{{ purchase$.totalPrice | number : "1.2-2" }}</span
+      >
+      <label htmlFor="code" class="mt-3 mb-1">Date</label>
+      <span class="font-bold text-xl">{{ purchase$.date.toDateString() }}</span>
+    </div>
+  </ng-template>
+  <!-- <span class="p-text-secondary text-l block mb-4"
+    >Product Purchase Information</span
+  ><label htmlFor="name" class="mt-2 mb-1">Purchase ID</label>
+  <span class="font-bold text-xl">{{ viewProductPurchase.purchaseId }}</span>
+  <label htmlFor="category" class="mt-3 mb-1">Quantity</label>
+  <span class="font-bold text-xl">{{ viewProductPurchase.quantity }}</span>
+  <label htmlFor="salePrice" class="mt-3 mb-1">Price Per Item</label>
+  <span class="font-bold text-xl"
+    >RM{{ viewProductPurchase.pricePerItem | number : "1.2-2" }}</span
+  >
+  <label htmlFor="description" class="mt-3 mb-1">Total Price</label>
+  <span class="font-bold text-xl"
+    >RM{{ viewProductPurchase.totalPrice | number : "1.2-2" }}</span
+  >
+  <label htmlFor="code" class="mt-3 mb-1">Date</label>
+  <span class="font-bold text-xl">{{
+    viewProductPurchase.data.toDateString()
+  }}</span>
+  <div class="flex align-items-center gap-3 mb-3"></div> -->
+</p-dialog>

@@ -1,0 +1,105 @@
+<p-breadcrumb [model]="breadCrumbs" class="mb-2">
+  <ng-template pTemplate="breadCrumb" let-breadCrumb>
+    <ng-container *ngIf="breadCrumb.route; else elseBlock">
+      <a [routerLink]="breadCrumb.route" class="p-menuitem-link">
+        <span [ngClass]="[breadCrumb.icon]" class="mr-2"></span>
+        <span class="text-primary font-semibold">{{ breadCrumb.label }}</span>
+      </a>
+    </ng-container>
+    <ng-template #elseBlock>
+      <a [href]="">
+        <span class="text-color">{{ breadCrumb.label }}</span>
+      </a>
+    </ng-template>
+  </ng-template>
+</p-breadcrumb>
+<div class="grid mt-3">
+  <div class="col-12">
+    <div class="card p-fluid">
+      <h5>Add New Product</h5>
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="field">
+          <label htmlFor="name">Name</label>
+          <input
+            pInputText
+            type="text"
+            name="name"
+            placeholder="Product name"
+            formControlName="name"
+          />
+        </div>
+        <div class="field flex flex-column">
+          <label htmlFor="category">Category</label>
+          <div class="grid">
+            <ng-container *ngFor="let item of categoryList">
+              <div class="col-12 xl:col-3 lg:col-4">
+                <div style="text-align: start">
+                  <input
+                    type="radio"
+                    [value]="item.label"
+                    formControlName="category"
+                  />
+                  {{ item.label | titlecase }}
+                  <i [ngClass]="item.icon"></i>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="field">
+          <label htmlFor="brand">Brand</label>
+          <input
+            pInputText
+            type="text"
+            name="brand"
+            placeholder="Product brand"
+            formControlName="brand"
+          />
+        </div>
+        <div class="field">
+          <label htmlFor="description">Description</label>
+          <input
+            pInputText
+            type="text"
+            name="description"
+            placeholder="Product description"
+            formControlName="description"
+          />
+        </div>
+        <div class="field">
+          <label htmlFor="salePrice">Sale Price</label>
+          <input
+            pInputText
+            type="number"
+            name="salePrice"
+            placeholder="Product price"
+            formControlName="salePrice"
+          />
+        </div>
+        <div class="field">
+          <label htmlFor="image">Image URL</label>
+          <input
+            pInputText
+            type="text"
+            name="image"
+            placeholder="Product image URL"
+            formControlName="image"
+          />
+        </div>
+        <div class="field">
+          <label htmlFor="quantity">Quantity</label>
+          <input
+            pInputText
+            type="number"
+            name="quantity"
+            placeholder="Product quantity"
+            formControlName="quantity"
+          />
+        </div>
+      </form>
+      <div class="flex flex-1">
+        <p-button icon="pi pi-plus" label="Submit" (onClick)="onSubmit()" />
+      </div>
+    </div>
+  </div>
+</div>
